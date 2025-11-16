@@ -1,0 +1,28 @@
+// Package regexinput for get the values to be expressed.
+package regexinput
+
+import (
+	"github.com/charmbracelet/bubbles/textinput"
+	"github.com/charmbracelet/lipgloss"
+)
+
+var (
+	InputStyle        = lipgloss.NewStyle().Padding(4)
+	PromptStyle       = lipgloss.NewStyle().Foreground(lipgloss.Color("#8B7EC8"))
+	WrapperInputStyle = lipgloss.NewStyle().Padding(1, 1, 0)
+)
+
+// type errMsg error
+
+func New() textinput.Model {
+	textInput := textinput.New()
+	textInput.Placeholder = "insert your regular expression here"
+	textInput.Prompt = "/"
+	textInput.PromptStyle = PromptStyle
+	textInput.Focus()
+	textInput.Width = 30 // Default Width Base
+	// textInput.CharLimit = 100
+	textInput.TextStyle = InputStyle
+
+	return textInput
+}
