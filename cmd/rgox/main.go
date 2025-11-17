@@ -15,8 +15,10 @@ import (
 	"github.com/clouby/rgox/internal/testinput"
 )
 
-const gap = "\n\n"
-const generalOffset = 6
+const (
+	gap           = "\n\n"
+	generalOffset = 6
+)
 
 type (
 	errMsg error
@@ -47,7 +49,7 @@ func initModel() Model {
 }
 
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink)
+	return tea.Batch(textinput.Blink, textarea.Blink)
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -56,7 +58,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.textInput.Width = msg.Width - generalOffset
-		m.textareaInput.SetWidth(msg.Height - generalOffset)
+		m.textareaInput.SetWidth(msg.Width - generalOffset)
 		m.help.Width = msg.Width - generalOffset
 	case tea.KeyMsg:
 		switch {
