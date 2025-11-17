@@ -12,16 +12,13 @@ var (
 	WrapperInputStyle = lipgloss.NewStyle().Padding(1, 1, 0)
 )
 
-// type errMsg error
-
 func New() textinput.Model {
 	textInput := textinput.New()
 	textInput.Placeholder = "insert your regular expression here"
-	textInput.Prompt = "/"
-	textInput.PromptStyle = PromptStyle
-	textInput.Focus()
+	textInput.Prompt = "┃ "
+	// textInput.PromptStyle = PromptStyle
+	// textInput.Focus()
 	textInput.Width = 30 // Default Width Base
-	// textInput.CharLimit = 100
 	textInput.TextStyle = InputStyle
 
 	return textInput
