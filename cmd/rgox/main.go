@@ -99,7 +99,7 @@ func (m Model) View() string {
 	return fmt.Sprintf(
 		"R%sX %s\n%s\n%s\n\n%s",
 		lipgloss.NewStyle().Foreground(lipgloss.Color("#8B7EC8")).Bold(true).Render("GO"),
-		lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render("- try your expressions here"),
+		lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render("- try your expressions..."),
 		regexinput.WrapperInputStyle.Render(m.textInput.View()),
 		regexinput.WrapperInputStyle.Render(m.textareaInput.View()),
 		helpView,
