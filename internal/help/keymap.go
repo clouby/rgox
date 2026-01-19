@@ -15,7 +15,7 @@ type KeyMap struct {
 
 func (k KeyMap) ShortHelp() []key.Binding {
 	return []key.Binding{
-		k.Help,
+		// k.Help,
 		k.Regex,
 		k.Test,
 		k.Quit,
@@ -25,7 +25,7 @@ func (k KeyMap) ShortHelp() []key.Binding {
 func (k KeyMap) FullHelp() [][]key.Binding {
 	return [][]key.Binding{
 		{k.Regex, k.Test, k.Up, k.Down},
-		{k.Help, k.Quit},
+		{k.Quit},
 	}
 }
 
@@ -39,12 +39,12 @@ var InternalKeys = KeyMap{
 		key.WithHelp("↓/j", "move down"),
 	),
 	Regex: key.NewBinding(
-		key.WithKeys("r"),
-		key.WithHelp("r", "go to regex input"),
+		key.WithKeys("ctrl+r"),
+		key.WithHelp("ctrl+r", "go to regex input"),
 	),
 	Test: key.NewBinding(
-		key.WithKeys("t"),
-		key.WithHelp("t", "go to test input"),
+		key.WithKeys("ctrl+t"),
+		key.WithHelp("ctrl+t", "go to test input"),
 	),
 	Help: key.NewBinding(
 		key.WithKeys("?"),

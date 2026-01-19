@@ -16,8 +16,9 @@ func New() textinput.Model {
 	textInput := textinput.New()
 	textInput.Placeholder = "insert your regular expression here"
 	textInput.Prompt = "┃ "
-	// textInput.PromptStyle = PromptStyle
-	// textInput.Focus()
+	textInput.CharLimit = 200 // Default Char Limit Base
+	textInput.PromptStyle = PromptStyle
+	textInput.Focus()
 	textInput.Width = 30 // Default Width Base
 	textInput.TextStyle = InputStyle
 
