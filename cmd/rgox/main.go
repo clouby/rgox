@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"regexp"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/help"
 	"github.com/charmbracelet/bubbles/key"
@@ -39,33 +38,45 @@ type Model struct {
 
 func initModel() Model {
 	return Model{
-		textInput:      regexinput.New(),
-		textareaInput:  caseinput.New(),
-		err:            nil,
-		keys:           ihelp.InternalKeys,
-		help:           help.New(),
-		content:        "",
-		containerStyle: lipgloss.NewStyle().Width(25).Height(5).MarginLeft(1).Padding(1).BorderStyle(lipgloss.RoundedBorder()).BorderForeground(lipgloss.Color("63")),
+		textInput:     regexinput.New(),
+		textareaInput: caseinput.New(),
+		err:           errors.New(""),
+		keys:          ihelp.InternalKeys,
+		help:          help.New(),
+		content:       "",
+		containerStyle: lipgloss.NewStyle().
+			MaxWidth(35).
+			Height(5).
+			MarginLeft(1).
+			Padding(1).
+			BorderStyle(
+				lipgloss.HiddenBorder(),
+			).
+			BorderForeground(
+				lipgloss.Color("63"),
+			),
 	}
 }
 
 func (m *Model) validateExpression() {
-	if m.textInput.Value() == "" {
-		m.err = errors.New("expression cannot be empty")
-		return
-	}
-	re := regexp.MustCompile(m.textInput.Value())
+	const (
+		Yellow  = "\033[1;33m"
+		NoColor = "\033[0m"
+		Red     = lipgloss.Color("#ffde9829")
+	)
 
-	m.content = strings.Join(re.FindAllString(m.textareaInput.Value(), -1), "\n")
-	// if !re.MatchString(m.textareaInput.Value()) {
-	// 	m.err = errors.New("expression does not match")
-	// 	return
-	// }
-	m.err = nil
+	text := m.textareaInput.Value()
+
+	pattern, err := regexp.Compile(m.textInput.Value())
+	if err != nil {
+		m.textInput.Err = err
+	}
+
+	m.content = pattern.ReplaceAllString(text, lipgloss.NewStyle().Foreground(lipgloss.Color("#000000")).Background(Red).Render("$0"))
 }
 
 func (m Model) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink, textarea.Blink)
+	return tea.Batch(m.textInput.Cursor.BlinkCmd(), m.textareaInput.Cursor.BlinkCmd())
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -73,6 +84,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmd  tea.Cmd
 		cmds []tea.Cmd
 	)
+
+	m.textInput, cmd = m.textInput.Update(msg)
+	cmds = append(cmds, cmd)
+	m.textareaInput, cmd = m.textareaInput.Update(msg)
+	cmds = append(cmds, cmd)
+
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.textInput.Width = msg.Width - generalOffset
@@ -104,13 +121,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	m.textInput, cmd = m.textInput.Update(msg)
-	cmds = append(cmds, cmd)
-	m.textareaInput, cmd = m.textareaInput.Update(msg)
-	cmds = append(cmds, cmd)
-
-	m.content = m.textInput.Value()
-
 	m.validateExpression()
 
 	return m, tea.Batch(cmds...)
@@ -118,17 +128,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	helpView := m.help.View(m.keys)
-	errView := ""
-	if m.err != nil {
-		errView = fmt.Sprintf("Error: %s", m.err.Error())
+	if m.textInput.Err != nil {
+		m.textInput.PromptStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("9"))
+	} else {
+		m.textInput.PromptStyle = regexinput.PromptStyle
 	}
 
 	return fmt.Sprintf(
-		lipgloss.NewStyle().Padding(1).Render("R%sX %s\n%s\n%s\n%s\n%s\n\n%s"),
+		lipgloss.NewStyle().Padding(1).Render("R%sX %s\n%s\n%s\n%s\n\n%s"),
 		lipgloss.NewStyle().Foreground(lipgloss.Color("#8B7EC8")).Bold(true).Render("GO"),
 		lipgloss.NewStyle().Foreground(lipgloss.Color("240")).Render("- try your expressions..."),
 		regexinput.WrapperInputStyle.Render(m.textInput.View()),
-		lipgloss.NewStyle().Foreground(lipgloss.Color("9")).PaddingTop(1).PaddingLeft(1).Render(errView),
 		regexinput.WrapperInputStyle.Render(m.textareaInput.View()),
 		m.containerStyle.Render(m.content),
 		helpView,
