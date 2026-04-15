@@ -31,12 +31,12 @@ func (k KeyMap) FullHelp() [][]key.Binding {
 
 var InternalKeys = KeyMap{
 	Up: key.NewBinding(
-		key.WithKeys("up", "k"),
-		key.WithHelp("↑/k", "move up"),
+		key.WithKeys("up"),
+		key.WithHelp("↑", "move up"),
 	),
 	Down: key.NewBinding(
-		key.WithKeys("down", "j"),
-		key.WithHelp("↓/j", "move down"),
+		key.WithKeys("down"),
+		key.WithHelp("↓", "move down"),
 	),
 	Regex: key.NewBinding(
 		key.WithKeys("ctrl+r"),
