@@ -1,6 +1,7 @@
+
 # R<span style="color:#8B7EC8;">GO</span>X
 
-<img width="978" height="304" alt="image" src="https://github.com/user-attachments/assets/413adcc9-6458-497d-a5c0-4a85e52a3ac9" />
+<img width="1145" height="755" alt="Demo capture using RGOX for Regex case using groups match for date format" src="https://github.com/user-attachments/assets/5556bd9e-8f33-40eb-b501-0b28bb339b83" />
 
 > [!WARNING]
 > This project is in very early development and may not be stable.
